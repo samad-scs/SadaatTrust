@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
+
 import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Sadaat Trust',
-  description: 'Trust that helps people in need in Thasara Saiyed Samaaj',
+  description: 'Trust that helps people in need in Thasara Saiyed Samaaj'
 }
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode
 }>) {
