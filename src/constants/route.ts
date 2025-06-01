@@ -1,3 +1,4 @@
 export const routes = {
-  dashboard: '/dashboard'
+  dashboard: '/dashboard',
+  users: '/users'
 }
