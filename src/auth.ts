@@ -1,98 +1,55 @@
 import NextAuth from 'next-auth'
-import CredentialsProvider from 'next-auth/providers/credentials'
+import Credentials from 'next-auth/providers/credentials'
 
+import { prisma } from '@/prisma'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { PrismaClient } from '@prisma/client'
-import * as bcrypt from 'bcrypt-ts'
+import { compareSync } from 'bcrypt-ts'
 
-import { encryptJWTwithJose } from '@utils/authorization'
+import { getUserFromDb } from '@utils/db'
 
-// Initialize Prisma Client
-const prisma = new PrismaClient()
-
-// Validate API_SECRET_KEY
-const secretKey = process.env.API_SECRET_KEY!
-if (!secretKey) {
-  throw new Error('API_SECRET_KEY is not defined')
-}
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Email and password are required')
-        }
+    Credentials({
+      authorize: async credentials => {
+        try {
+          let user = null
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
-        })
+          const { email, password } = credentials as { email: string; password: string }
+          console.log('password :', password)
 
-        if (!user || !user.password) {
-          throw new Error('No user found with this email')
-        }
+          user = await getUserFromDb(email)
+          console.log('user :', user)
 
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+          if (!user) return null
 
-        if (!isPasswordValid) {
-          throw new Error('Invalid password')
-        }
+          // Compare input password with stored hash
+          const isPasswordValid = compareSync(password, user.password)
+          if (!isPasswordValid) {
+            return null
+          }
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          gender: user.gender,
-          phone: user.phone,
-          emailVerified: null
+          // return JSON object with the user data
+          return user
+        } catch {
+          return null
         }
       }
     })
   ],
-  session: {
-    strategy: 'jwt',
-    maxAge: 2 * 60 * 60 // 2 hours
-  },
+
+  pages: { signIn: '/login' },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
-        token.email = user.email
-        token.name = user.name
-        token.gender = user.gender
-        token.phone = user.phone
-        token.encrypted = await encryptJWTwithJose({
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          gender: user.gender,
-          phone: user.phone
-        })
-      }
-
-      return token
+    authorized: async ({ auth }) => {
+      // Logged in users are authenticated, otherwise redirect to login page
+      return !!auth
     },
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id!
-        session.user.email = token.email!
-        session.user.name = token.name!
-        session.user.gender = token.gender!
-        session.user.phone = token.phone!
-        session.encryptedToken = token.encrypted
-      }
-
-      return session
+    async redirect({ url, baseUrl }) {
+      // Ensure redirect to /dashboard after successful login
+      return url.startsWith(baseUrl) ? url : `${baseUrl}/dashboard`
     }
   },
-  secret: process.env.AUTH_SECRET,
-  pages: {
-    signIn: '/login'
+  session: {
+    strategy: 'jwt'
   }
 })

@@ -2,9 +2,7 @@ import Image from 'next/image'
 
 import bgImage from '@public/helping-kids.jpg'
 
-import { LoginForm } from '@/views/login/login-form'
-
-import { loginAction } from '@/services/actions/auth'
+import LoginForm from '@/views/login/login-form'
 
 export default function LoginPage() {
   return (
@@ -17,7 +15,7 @@ export default function LoginPage() {
         </div>
         <div className='flex flex-1 items-center justify-center'>
           <div className='w-full max-w-xs'>
-            <LoginForm action={loginAction} />
+            <LoginForm />
           </div>
         </div>
       </div>

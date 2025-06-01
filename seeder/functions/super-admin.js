@@ -1,26 +1,32 @@
-import { PrismaClient } from '@prisma/client'
-import { genSaltSync, hashSync } from 'bcrypt-ts'
+const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
 async function seedSuperAdmin() {
   try {
+    // Dynamically import bcrypt-ts
+    const bcrypt = await import('bcrypt-ts')
+
     // Superadmin data
     const superAdminData = {
       name: 'Super Admin',
       email: 'superadmin@example.com',
-      password: 'SuperSecurePass123!',
+      password: 'Abc@223133',
       gender: 'Male',
       phone: '1234567890',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      id: '0'
     }
 
     // Check if superadmin already exists
-    const existingUser = await prisma.users.findUnique({
-      where: { email: superAdminData.email },
+    const existingUser = await prisma.user.findUnique({
+      where: { email: superAdminData.email }
     })
 
     if (existingUser) {
       console.log('Superadmin already exists:', superAdminData.email)
+
       return
     }
 
@@ -34,26 +40,24 @@ async function seedSuperAdmin() {
       throw new Error('Gender must be Male or Female')
     }
 
-    const salt = genSaltSync(10)
-
     // Hash password
-    const hashedPassword = hashSync(superAdminData.password, salt)
+    const hashedPassword = await bcrypt.hash(superAdminData.password, 10)
 
     // Create superadmin
-    const superAdmin = await prisma.users.create({
+    const superAdmin = await prisma.user.create({
       data: {
         name: superAdminData.name,
         email: superAdminData.email,
         password: hashedPassword,
         gender: superAdminData.gender,
-        phone: superAdminData.phone,
-      },
+        phone: superAdminData.phone
+      }
     })
 
     console.log('Superadmin created successfully:', {
       id: superAdmin.id,
       email: superAdmin.email,
-      name: superAdmin.name,
+      name: superAdmin.name
     })
   } catch (error) {
     console.error('Error seeding superadmin:', error.message)
