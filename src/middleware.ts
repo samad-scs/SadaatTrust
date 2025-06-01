@@ -9,9 +9,6 @@ export default auth(req => {
   // Define public routes that don't require authentication
   const publicRoutes = ['/login', '/forgot-password']
 
-  // Log session for debugging
-  console.log('Session:', session)
-
   // Authenticated user trying to access public routes
   if (session && publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL('/dashboard', origin))
