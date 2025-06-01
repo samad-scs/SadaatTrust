@@ -141,6 +141,7 @@ export function ChartAreaInteractive() {
     }
     const startDate = new Date(referenceDate)
     startDate.setDate(startDate.getDate() - daysToSubtract)
+
     return date >= startDate
   })
 
@@ -208,6 +209,7 @@ export function ChartAreaInteractive() {
               minTickGap={32}
               tickFormatter={value => {
                 const date = new Date(value)
+
                 return date.toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric'

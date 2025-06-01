@@ -304,6 +304,7 @@ export function DataTable({ data: initialData }: { data: z.infer<typeof schema>[
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
+
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
     pageSize: 10
@@ -344,6 +345,7 @@ export function DataTable({ data: initialData }: { data: z.infer<typeof schema>[
       setData(data => {
         const oldIndex = dataIds.indexOf(active.id)
         const newIndex = dataIds.indexOf(over.id)
+
         return arrayMove(data, oldIndex, newIndex)
       })
     }

@@ -1,9 +1,12 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 import * as RechartsPrimitive from 'recharts'
+
+/* eslint-disable no-unused-vars */
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const
@@ -79,6 +82,7 @@ ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color
+
     return color ? `  --color-${key}: ${color};` : null
   })
   .join('\n')}
@@ -125,6 +129,7 @@ function ChartTooltipContent({
     const [item] = payload
     const key = `${labelKey || item?.dataKey || item?.name || 'value'}`
     const itemConfig = getPayloadConfigFromPayload(config, item, key)
+
     const value =
       !labelKey && typeof label === 'string' ? config[label as keyof typeof config]?.label || label : itemConfig?.label
 
