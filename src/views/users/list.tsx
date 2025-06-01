@@ -10,6 +10,7 @@ import dayjs from 'dayjs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 const fetchUsers = async (page: number, pageSize: number) => {
@@ -32,13 +33,13 @@ const UserList = () => {
     {
       accessorKey: 'name',
       header: 'Name',
-      cell: ({ row }) => <div className='font-medium'>{row.original.name}</div>
+      cell: ({ row }) => <div className='font-medium min-w-32'>{row.original.name}</div>
     },
     {
       accessorKey: 'email',
       header: 'Email',
       cell: ({ row }) => (
-        <div className='w-32'>
+        <div className='min-w-56'>
           <Badge variant='outline' className='text-muted-foreground px-1.5'>
             {row.original.email}
           </Badge>
@@ -49,7 +50,9 @@ const UserList = () => {
       accessorKey: 'status',
       header: 'Status',
       cell: ({ row }) => (
-        <Badge variant={row.original.name ? 'default' : 'secondary'}>{row.original.name ? 'Active' : 'Inactive'}</Badge>
+        <div className='min-w-36'>
+          <Switch defaultChecked={!!row?.original?.status} />
+        </div>
       )
     },
     {

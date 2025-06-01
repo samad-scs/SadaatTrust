@@ -10,10 +10,12 @@ async function seedSuperAdmin() {
     // Superadmin data
     const superAdminData = {
       name: 'Super Admin',
-      email: 'superadmin@example.com',
+      email: 'admin@sadaat.com',
       password: 'Abc@223133',
       gender: 'Male',
       phone: '1234567890',
+      isSuperAdmin: true,
+      status: true,
       createdAt: new Date(),
       updatedAt: new Date(),
       id: '0'
