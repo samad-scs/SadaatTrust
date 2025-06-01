@@ -1,4 +1,4 @@
-import { IconDashboard, IconUsers } from '@tabler/icons-react'
+import { IconDashboard, IconUserShield } from '@tabler/icons-react'
 
 import { routes } from '@/constants/route'
 
@@ -9,8 +9,8 @@ export const menuData = [
     icon: IconDashboard
   },
   {
-    title: 'Users',
+    title: 'Admin Users',
     url: routes.users,
-    icon: IconUsers
+    icon: IconUserShield
   }
 ]
