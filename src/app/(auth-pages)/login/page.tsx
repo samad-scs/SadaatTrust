@@ -1,3 +1,5 @@
+import { Suspense } from 'react'
+
 import Image from 'next/image'
 
 import bgImage from '@public/helping-kids.jpg'
@@ -15,7 +17,9 @@ export default function LoginPage() {
         </div>
         <div className='flex flex-1 items-center justify-center'>
           <div className='w-full max-w-xs'>
-            <LoginForm />
+            <Suspense>
+              <LoginForm />
+            </Suspense>
           </div>
         </div>
       </div>
