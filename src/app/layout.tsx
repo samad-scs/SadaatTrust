@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 
 import NextProgress from '@/components/custom/next-progress'
 import { Toaster } from '@/components/ui/sonner'
+import Providers from '@/components/wrappers/server-provider'
 
 import './globals.css'
 
@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={`antialiased`} suppressHydrationWarning>
         <ThemeProvider attribute='class' defaultTheme='dark'>
           <NextProgress />
-          <SessionProvider>{children}</SessionProvider>
+          <Providers>{children}</Providers>
           <Toaster position='top-left' richColors closeButton />
         </ThemeProvider>
       </body>
