@@ -1,8 +1,10 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
+import { useTheme } from 'next-themes'
+import { useRouter } from 'next/navigation'
 
-import { IconCreditCard, IconDotsVertical, IconLogout, IconNotification, IconUserCircle } from '@tabler/icons-react'
+import { IconDotsVertical, IconLogout, IconMoon, IconSun, IconUserCircle } from '@tabler/icons-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -15,10 +17,10 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
 
 import { getInitials } from '@utils/index'
-
-import { Skeleton } from '../ui/skeleton'
 
 export function NavUser({
   user
@@ -30,8 +32,17 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const { data: session, status } = useSession()
+  const { theme, setTheme } = useTheme()
+  const router = useRouter()
 
-  const { data, status } = useSession()
+  const handleProfileClick = () => {
+    router.push('/profile')
+  }
+
+  const handleThemeToggle = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
 
   return (
     <SidebarMenu>
@@ -45,19 +56,19 @@ export function NavUser({
                 size='lg'
                 className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
               >
-                <Avatar className='h-8 w-8 rounded-lg grayscale'>
-                  <AvatarImage src={user.avatar} alt={data?.user?.name} />
-                  <AvatarFallback className='rounded-lg'>{getInitials(data?.user?.name || 'CN')}</AvatarFallback>
+                <Avatar className='h-8 w-8 rounded-lg bg-primary'>
+                  <AvatarImage src={user.avatar} alt={session?.user?.name} />
+                  <AvatarFallback className='rounded-lg'>{getInitials(session?.user?.name || 'CN')}</AvatarFallback>
                 </Avatar>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-medium'>{user.name}</span>
-                  <span className='text-muted-foreground truncate text-xs'>{user.email}</span>
+                  <span className='truncate font-medium'>{session?.user?.name}</span>
+                  <span className='text-muted-foreground truncate text-xs'>{session?.user?.email}</span>
                 </div>
                 <IconDotsVertical className='ml-auto size-4' />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className='w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg'
+              className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg'
               side={isMobile ? 'bottom' : 'right'}
               align='end'
               sideOffset={4}
@@ -76,22 +87,28 @@ export function NavUser({
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <IconUserCircle />
-                  Account
+                <DropdownMenuItem onClick={handleProfileClick}>
+                  <IconUserCircle className='mr-2 h-4 w-4' />
+                  Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <IconCreditCard />
-                  Billing
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <IconNotification />
-                  Notifications
+                <DropdownMenuItem asChild>
+                  <div className='flex items-center justify-between w-full'>
+                    <div className='flex items-center'>
+                      <IconMoon className='mr-2 h-4 w-4 dark:hidden' />
+                      <IconSun className='mr-2 h-4 w-4 hidden dark:block' />
+                      <span>Dark Mode</span>
+                    </div>
+                    <Switch
+                      checked={theme === 'dark'}
+                      onCheckedChange={handleThemeToggle}
+                      aria-label='Toggle dark mode'
+                    />
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <IconLogout />
+              <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/login' })}>
+                <IconLogout className='mr-2 h-4 w-4' />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>

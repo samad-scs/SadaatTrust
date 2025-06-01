@@ -47,6 +47,7 @@
   --radius: 0.75rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0.003 249.21868948998485);
+  --background-dots: rgba(0, 0, 0, 0.3);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0.003 249.21868948998485);
   --popover: oklch(1 0 0);
@@ -81,6 +82,7 @@
 .dark {
   --background: oklch(0.211 0.019 250.4404787797931);
   --foreground: oklch(0.961 0.002 249.6714687065196);
+  --background-dots: rgba(255, 255, 255, 0.02);
   --card: oklch(0.253 0.026 250.53616358340489);
   --card-foreground: oklch(0.961 0.002 249.6714687065196);
   --popover: oklch(0.253 0.026 250.53616358340489);
@@ -121,27 +123,28 @@
   }
 
   .svg-backgrounds {
-    background-image: repeating-radial-gradient(
+    background-image:
+      repeating-radial-gradient(
         circle at center center,
         transparent 0px,
         transparent 13px,
-        rgba(0, 0, 0, 0.03) 13px,
-        rgba(0, 0, 0, 0.03) 24px,
+        var(--background-dots) 13px,
+        var(--background-dots) 24px,
         transparent 24px,
         transparent 62px,
-        rgba(0, 0, 0, 0.03) 62px,
-        rgba(0, 0, 0, 0.03) 96px
+        var(--background-dots) 62px,
+        var(--background-dots) 96px
       ),
       repeating-radial-gradient(
         circle at center center,
-        rgb(255, 255, 255) 0px,
-        rgb(255, 255, 255) 14px,
-        rgb(255, 255, 255) 14px,
-        rgb(255, 255, 255) 18px,
-        rgb(255, 255, 255) 18px,
-        rgb(255, 255, 255) 28px,
-        rgb(255, 255, 255) 28px,
-        rgb(255, 255, 255) 32px
+        var(--background) 0px,
+        var(--background) 14px,
+        var(--background) 14px,
+        var(--background) 18px,
+        var(--background) 18px,
+        var(--background) 28px,
+        var(--background) 28px,
+        var(--background) 32px
       );
     background-size: 21px 21px;
   }

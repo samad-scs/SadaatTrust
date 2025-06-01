@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { SessionProvider } from 'next-auth/react'
+import { ThemeProvider } from 'next-themes'
+
+import { Toaster } from '@/components/ui/sonner'
 
 import './globals.css'
 
@@ -16,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={`antialiased`} suppressHydrationWarning>
-        <SessionProvider>{children}</SessionProvider>
+        <ThemeProvider attribute='class' defaultTheme='dark'>
+          <SessionProvider>{children}</SessionProvider>
+          <Toaster position='top-left' richColors closeButton />
+        </ThemeProvider>
       </body>
     </html>
   )

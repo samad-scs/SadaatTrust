@@ -3,9 +3,11 @@
 import { useForm } from 'react-hook-form'
 
 import { signIn } from 'next-auth/react'
+import { useSearchParams } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -23,6 +25,8 @@ const formSchema = z.object({
 })
 
 function LoginForm({ className }: React.ComponentProps<'form'>) {
+  const searchParams = useSearchParams()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,19 +40,21 @@ function LoginForm({ className }: React.ComponentProps<'form'>) {
       const result: any = await signIn('credentials', {
         email: values.email,
         password: values.password,
-        redirect: true, // Enable redirect
-        redirectTo: '/dashboard' // Specify the redirect URL
+        redirect: false, // Prevent page refresh
+        redirectTo: searchParams.get('callbackUrl') || '/dashboard'
       })
 
       if (result?.error) {
-        console.error('Login error:', result.error)
-
-        // Optionally display error to the user
+        toast.error('Invalid credentials') // Show toast on error
         form.setError('root', { message: 'Invalid email or password' })
+      } else {
+        toast.success('Logged in successfully') // Show toast on error
+
+        window.location.reload()
       }
     } catch (error) {
+      toast.error('An unexpected error occurred')
       console.error('Unexpected error during login:', error)
-      form.setError('root', { message: 'An unexpected error occurred' })
     }
   }
 
