@@ -83,13 +83,11 @@ const UserList = () => {
         </TableHeader>
         <TableBody>
           {isLoading ? (
-            Array.from({ length: pageSize }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell colSpan={columns.length}>
-                  <Skeleton className='h-8 w-full' />
-                </TableCell>
-              </TableRow>
-            ))
+            <TableRow>
+              <TableCell colSpan={columns.length}>
+                <Skeleton className='h-8 w-full' />
+              </TableCell>
+            </TableRow>
           ) : table.getRowModel().rows.length ? (
             table.getRowModel().rows.map(row => (
               <TableRow key={row.id}>
