@@ -47,7 +47,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return url.startsWith(baseUrl) ? url : `${baseUrl}/dashboard`
     }
   },
-  session: {
-    strategy: 'jwt'
-  }
+  session: { strategy: 'jwt' }
 })
