@@ -35,6 +35,8 @@ function LoginForm({ className }: React.ComponentProps<'form'>) {
     }
   })
 
+  const { isSubmitting } = form.formState
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const result: any = await signIn('credentials', {
@@ -96,8 +98,8 @@ function LoginForm({ className }: React.ComponentProps<'form'>) {
               )}
             />
           </div>
-          <Button type='submit' className='w-full'>
-            Login
+          <Button type='submit' disabled={isSubmitting} className='w-full'>
+            {isSubmitting ? 'Logging in...' : 'Login'}
           </Button>
         </div>
       </form>
