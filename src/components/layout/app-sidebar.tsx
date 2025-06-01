@@ -2,27 +2,15 @@
 
 import * as React from 'react'
 
-import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers
-} from '@tabler/icons-react'
+import Link from 'next/link'
 
-import { NavDocuments } from '@/components/layout/nav-documents'
+import { webConfig } from '@/config'
+import { IconChartBar, IconDashboard, IconFolder, IconListDetails, IconUsers } from '@tabler/icons-react'
+import { HelpingHand } from 'lucide-react'
+
+import { routes } from '@/constants/route'
+
 import { NavMain } from '@/components/layout/nav-main'
-import { NavSecondary } from '@/components/layout/nav-secondary'
 import { NavUser } from '@/components/layout/nav-user'
 import {
   Sidebar,
@@ -43,7 +31,7 @@ const data = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '#',
+      url: routes.dashboard,
       icon: IconDashboard
     },
     {
@@ -66,88 +54,6 @@ const data = {
       url: '#',
       icon: IconUsers
     }
-  ],
-  navClouds: [
-    {
-      title: 'Capture',
-      icon: IconCamera,
-      isActive: true,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#'
-        },
-        {
-          title: 'Archived',
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Proposal',
-      icon: IconFileDescription,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#'
-        },
-        {
-          title: 'Archived',
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Prompts',
-      icon: IconFileAi,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#'
-        },
-        {
-          title: 'Archived',
-          url: '#'
-        }
-      ]
-    }
-  ],
-  navSecondary: [
-    {
-      title: 'Settings',
-      url: '#',
-      icon: IconSettings
-    },
-    {
-      title: 'Get Help',
-      url: '#',
-      icon: IconHelp
-    },
-    {
-      title: 'Search',
-      url: '#',
-      icon: IconSearch
-    }
-  ],
-  documents: [
-    {
-      name: 'Data Library',
-      url: '#',
-      icon: IconDatabase
-    },
-    {
-      name: 'Reports',
-      url: '#',
-      icon: IconReport
-    },
-    {
-      name: 'Word Assistant',
-      url: '#',
-      icon: IconFileWord
-    }
   ]
 }
 
@@ -158,18 +64,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild className='data-[slot=sidebar-menu-button]:!p-1.5'>
-              <a href='#'>
-                <IconInnerShadowTop className='!size-5' />
-                <span className='text-base font-semibold'>Acme Inc.</span>
-              </a>
+              <Link href={routes.dashboard}>
+                <HelpingHand className='!size-5' />
+                <span className='text-base font-semibold'>{webConfig.name}</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className='mt-auto' />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
