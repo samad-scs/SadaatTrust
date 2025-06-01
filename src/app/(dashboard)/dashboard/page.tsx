@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <>
-      <BreadcrumbComponent />
+      <BreadcrumbComponent data={[]} />
     </>
   )
 }

@@ -16,10 +16,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           let user = null
 
           const { email, password } = credentials as { email: string; password: string }
-          console.log('password :', password)
 
           user = await getUserFromDb(email)
-          console.log('user :', user)
 
           if (!user) return null
 
