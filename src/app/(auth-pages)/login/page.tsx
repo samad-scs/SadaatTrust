@@ -1,14 +1,10 @@
-import { LoginForm } from '@/views/login/login-form'
+import { Suspense } from 'react'
+
 import Image from 'next/image'
 
 import bgImage from '@public/helping-kids.jpg'
 
-const loginFormAction = async (form: FormData) => {
-  'use server'
-
-  const email = form.get('email')
-  console.log('email :', email)
-}
+import LoginForm from '@/views/login/login-form'
 
 export default function LoginPage() {
   return (
@@ -21,7 +17,9 @@ export default function LoginPage() {
         </div>
         <div className='flex flex-1 items-center justify-center'>
           <div className='w-full max-w-xs'>
-            <LoginForm action={loginFormAction} />
+            <Suspense>
+              <LoginForm />
+            </Suspense>
           </div>
         </div>
       </div>
