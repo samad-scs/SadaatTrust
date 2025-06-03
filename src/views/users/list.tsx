@@ -7,6 +7,7 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table'
 import dayjs from 'dayjs'
+import { debounce } from 'lodash'
 import { PlusIcon } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
@@ -22,7 +23,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-import { deleteAdminUser, fetchUsersList } from '@/services/db/users'
+import { deleteAdminUser, fetchUsersList, updateAdminUserStatusAPI } from '@/services/db/users'
 
 import { showAlert } from '@utils/alert'
 
@@ -82,6 +83,12 @@ const UserList = () => {
     retry: false
   })
 
+  const handleStatusChange = async (id: string, status: boolean) => {
+    await updateAdminUserStatusAPI(id, status)
+  }
+
+  const debouncedStatusChange = debounce(handleStatusChange, 500)
+
   const columns: ColumnDef<User>[] = [
     {
       accessorKey: 'name',
@@ -104,7 +111,11 @@ const UserList = () => {
       header: 'Status',
       cell: ({ row }) => (
         <div className='min-w-36'>
-          <Switch disabled={row?.original?.isSuperAdmin} defaultChecked={!!row?.original?.status} />
+          <Switch
+            disabled={row?.original?.isSuperAdmin}
+            onCheckedChange={value => debouncedStatusChange(row?.original?.id, value)}
+            defaultChecked={!!row?.original?.status}
+          />
         </div>
       )
     },

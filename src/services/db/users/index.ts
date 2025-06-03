@@ -25,9 +25,18 @@ export const createNewAdminUserAPI = async (body: any) => {
     toast.success(response?.data?.message || 'User created successfully')
 
     return response.data
-  } catch (error) {
-    console.log('error :', error)
+  } catch {
+    return null
+  }
+}
 
+export const viewAdminUser = async (id: string) => {
+  try {
+    const response = await axios.get(eps?.view + id)
+    if (!response.data?.status) throw new Error('Failed to get user')
+
+    return response.data
+  } catch {
     return null
   }
 }
@@ -47,6 +56,21 @@ export const updateAdminUserAPI = async (id: string, body: any) => {
   }
 }
 
+export const updateAdminUserStatusAPI = async (id: string, status: boolean) => {
+  try {
+    const response = await axios.patch(eps?.updateStatus + id, { status })
+    if (!response.data?.status) throw new Error(response.data?.message || 'Failed to update user status')
+
+    toast.success(response?.data?.message || 'User status updated successfully')
+
+    return response.data
+  } catch (error: any) {
+    toast.error(error || 'Failed to update user status')
+
+    return null
+  }
+}
+
 export const deleteAdminUser = async (id: string) => {
   try {
     const response = await axios.delete(eps?.deleteItem + id)
@@ -55,9 +79,7 @@ export const deleteAdminUser = async (id: string) => {
     toast.success(response?.data?.message || 'User deleted successfully')
 
     return response.data
-  } catch (error) {
-    console.log('error :', error)
-
+  } catch {
     return null
   }
 }
