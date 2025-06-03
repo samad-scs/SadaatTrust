@@ -23,7 +23,7 @@ export default function RootLayout({
         <ThemeProvider attribute='class' defaultTheme='dark'>
           <NextProgress />
           <Providers>{children}</Providers>
-          <Toaster position='top-left' richColors closeButton />
+          <Toaster position='top-right' closeButton />
         </ThemeProvider>
       </body>
     </html>
