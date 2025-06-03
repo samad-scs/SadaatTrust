@@ -8,18 +8,19 @@ generator client {
 }
 
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String    @unique
-  password  String
-  gender    Gender
-  phone     String
-  isSuperAdmin    Boolean   @default(false)
-  status    Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  accounts  Account[] // Relation for NextAuth.js
-  sessions  Session[] // Relation for NextAuth.js
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String    @unique
+  password     String
+  gender       Gender
+  phone        String
+  isSuperAdmin Boolean   @default(false)
+  canViewData  Boolean   @default(false)
+  status       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  accounts     Account[] // Relation for NextAuth.js
+  sessions     Session[] // Relation for NextAuth.js
 }
 
 enum Gender {
@@ -28,8 +29,8 @@ enum Gender {
 }
 
 model Account {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String    @db.ObjectId
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
   type              String
   provider          String
   providerAccountId String
@@ -40,7 +41,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }

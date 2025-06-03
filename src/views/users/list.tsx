@@ -3,30 +3,64 @@
 import { memo, useState } from 'react'
 
 import { User } from '@prisma/client'
+import { IconDotsVertical } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table'
 import dayjs from 'dayjs'
+import { PlusIcon } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-const fetchUsers = async (page: number, pageSize: number) => {
-  const response = await fetch(`/api/users?page=${page}&pageSize=${pageSize}`)
-  if (!response.ok) throw new Error('Failed to fetch users')
+import { fetchUsersList } from '@/services/db/users'
 
-  return response.json()
+import AdminUserForm from './form'
+
+const RowActions = ({ data, refetch }: { data: User; refetch: () => void }) => {
+  const [open, setOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  return (
+    <>
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant='ghost' className='data-[state=open]:bg-muted text-muted-foreground flex size-8' size='icon'>
+            <IconDotsVertical />
+            <span className='sr-only'>Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='end' className='w-32'>
+          <DropdownMenuItem onClick={() => setOpen(true)}>Edit</DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant='destructive'>Delete</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AdminUserForm open={open} setOpen={setOpen} refetch={refetch} editData={data} />
+    </>
+  )
 }
 
 const UserList = () => {
   const [page, setPage] = useState(1)
   const pageSize = 10
 
-  const { data, isLoading } = useQuery({
+  const [openAddForm, setOpenAddForm] = useState(false)
+
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['users', page, pageSize],
-    queryFn: () => fetchUsers(page, pageSize)
+    queryFn: () => fetchUsersList(page, pageSize),
+    retry: false
   })
 
   const columns: ColumnDef<User>[] = [
@@ -59,6 +93,11 @@ const UserList = () => {
       accessorKey: 'createdAt',
       header: 'Created At',
       cell: ({ row }) => (row.original.createdAt ? dayjs(row.original.createdAt).format('MMM D, YYYY') : 'N/A')
+    },
+    {
+      accessorKey: 'id',
+      header: '',
+      cell: ({ row: { original } }) => <RowActions data={original} refetch={refetch} />
     }
   ]
 
@@ -71,64 +110,76 @@ const UserList = () => {
   })
 
   return (
-    <div className='m-4 rounded-lg overflow-hidden border border-muted'>
-      <Table>
-        <TableHeader className='bg-muted sticky top-0 z-10'>
-          {table.getHeaderGroups().map(headerGroup => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <TableHead key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {isLoading ? (
-            <TableRow>
-              <TableCell colSpan={columns.length}>
-                <Skeleton className='h-8 w-full' />
-              </TableCell>
-            </TableRow>
-          ) : table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map(row => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+    <div className='space-y-3 m-4'>
+      <div className='flex justify-between items-center'>
+        <div />
+        <div>
+          <Button onClick={() => setOpenAddForm(true)}>
+            <PlusIcon />
+            Add User
+          </Button>
+        </div>
+      </div>
+      <div className='rounded-lg overflow-hidden border border-muted'>
+        <Table>
+          <TableHeader className='bg-muted sticky top-0 z-10'>
+            {table.getHeaderGroups().map(headerGroup => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <TableHead key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className='h-24 text-center'>
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <div className='flex items-center justify-between p-4'>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-          disabled={page === 1 || isLoading}
-        >
-          Previous
-        </Button>
-        <span>
-          Page {page} of {data?.totalPages ?? 1}
-        </span>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={() => setPage(prev => prev + 1)}
-          disabled={page >= (data?.totalPages ?? 1) || isLoading}
-        >
-          Next
-        </Button>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length}>
+                  <Skeleton className='h-8 w-full' />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map(row => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className='h-24 text-center'>
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <div className='flex items-center justify-between p-4'>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+            disabled={page === 1 || isLoading}
+          >
+            Previous
+          </Button>
+          <span>
+            Page {page} of {data?.totalPages ?? 1}
+          </span>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => setPage(prev => prev + 1)}
+            disabled={page >= (data?.totalPages ?? 1) || isLoading}
+          >
+            Next
+          </Button>
+        </div>
       </div>
+      <AdminUserForm open={openAddForm} setOpen={setOpenAddForm} refetch={refetch} />
     </div>
   )
 }
