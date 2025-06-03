@@ -13,12 +13,10 @@ async function seedSuperAdmin() {
       email: 'admin@sadaat.com',
       password: 'Abc@223133',
       gender: 'Male',
-      phone: '1234567890',
+      phone: '9999999999',
       isSuperAdmin: true,
-      status: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      id: '0'
+      canViewData: true,
+      status: true
     }
 
     // Check if superadmin already exists
@@ -48,11 +46,8 @@ async function seedSuperAdmin() {
     // Create superadmin
     const superAdmin = await prisma.user.create({
       data: {
-        name: superAdminData.name,
-        email: superAdminData.email,
-        password: hashedPassword,
-        gender: superAdminData.gender,
-        phone: superAdminData.phone
+        ...superAdminData,
+        password: hashedPassword
       }
     })
 
