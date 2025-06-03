@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server'
+
 //? ** Extracting First Letters
 export const getInitials = (string: string) => {
   if (!string) return string
@@ -79,3 +81,7 @@ export const defaultFormatDate = 'DD MMM, YYYY'
 
 //? ** Default DateTime Format
 export const defaultFormatTime = 'DD MMM, YYYY h:mm A'
+
+export const apiResponse = (status: boolean, statusCode: number, message: string, data?: any) => {
+  return NextResponse.json({ data: data || null, status, statusCode, message })
+}

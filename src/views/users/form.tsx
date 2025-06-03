@@ -64,6 +64,8 @@ const AdminUserForm: React.FC<AdminUserFormProps> = ({ open, setOpen, refetch, e
     defaultValues
   })
 
+  const { isSubmitting } = form.formState
+
   const onSubmit = async (formData: FormType) => {
     if (!!editData) {
       return
@@ -204,7 +206,9 @@ const AdminUserForm: React.FC<AdminUserFormProps> = ({ open, setOpen, refetch, e
               )}
             </div>
             <SheetFooter className='flex flex-col gap-3 md:flex-row-reverse md:justify-between md:items-center w-full'>
-              <Button type='submit'>Save changes</Button>
+              <Button type='submit' disabled={isSubmitting}>
+                {isSubmitting ? 'Saving...' : 'Save changes'}
+              </Button>
               <SheetClose asChild>
                 <Button variant='outline'>Close</Button>
               </SheetClose>

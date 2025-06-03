@@ -15,6 +15,7 @@ model User {
   gender       Gender
   phone        String
   isSuperAdmin Boolean   @default(false)
+  isDeleted    Boolean   @default(false)
   canViewData  Boolean   @default(false)
   status       Boolean   @default(true)
   createdAt    DateTime  @default(now())

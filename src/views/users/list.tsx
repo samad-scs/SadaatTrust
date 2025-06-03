@@ -22,13 +22,29 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-import { fetchUsersList } from '@/services/db/users'
+import { deleteAdminUser, fetchUsersList } from '@/services/db/users'
+
+import { showAlert } from '@utils/alert'
 
 import AdminUserForm from './form'
 
 const RowActions = ({ data, refetch }: { data: User; refetch: () => void }) => {
   const [open, setOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const handleDelete = async () => {
+    showAlert({
+      title: 'Are you sure?',
+      text: `By clicking on "Yes, delete", you will delete the ${data?.name}`,
+      confirmButtonText: 'Yes, delete',
+      confirmButtonColor: 'red',
+      showCancelButton: true
+    }).then(async value => {
+      if (value?.isConfirmed) {
+        await deleteAdminUser(data?.id)
+      }
+    })
+  }
 
   return (
     <>
@@ -43,7 +59,9 @@ const RowActions = ({ data, refetch }: { data: User; refetch: () => void }) => {
           <DropdownMenuItem onClick={() => setOpen(true)}>Edit</DropdownMenuItem>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant='destructive'>Delete</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDelete} variant='destructive'>
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AdminUserForm open={open} setOpen={setOpen} refetch={refetch} editData={data} />
@@ -85,7 +103,7 @@ const UserList = () => {
       header: 'Status',
       cell: ({ row }) => (
         <div className='min-w-36'>
-          <Switch defaultChecked={!!row?.original?.status} />
+          <Switch disabled={row?.original?.isSuperAdmin} defaultChecked={!!row?.original?.status} />
         </div>
       )
     },
@@ -100,6 +118,8 @@ const UserList = () => {
       cell: ({ row: { original } }) => <RowActions data={original} refetch={refetch} />
     }
   ]
+
+  console.log('data?.users :', data?.users)
 
   const table = useReactTable({
     data: data?.users ?? [],

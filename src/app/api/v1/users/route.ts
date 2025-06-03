@@ -13,10 +13,16 @@ export async function GET(request: Request) {
     const [users, total] = await Promise.all([
       prisma.user.findMany({
         skip: (page - 1) * pageSize,
-        where: { isSuperAdmin: false },
+        where: {
+          isDeleted: { not: true }
+        },
         take: pageSize
       }),
-      prisma.user.count()
+      prisma.user.count({
+        where: {
+          isDeleted: { not: true }
+        }
+      })
     ])
 
     return NextResponse.json({
