@@ -42,6 +42,7 @@ const RowActions = ({ data, refetch }: { data: User; refetch: () => void }) => {
     }).then(async value => {
       if (value?.isConfirmed) {
         await deleteAdminUser(data?.id)
+        refetch()
       }
     })
   }
@@ -119,10 +120,8 @@ const UserList = () => {
     }
   ]
 
-  console.log('data?.users :', data?.users)
-
   const table = useReactTable({
-    data: data?.users ?? [],
+    data: data?.users || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

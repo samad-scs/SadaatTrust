@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 
+import { prisma } from '@/prisma'
+
 import { apiResponse } from '@utils/index'
 
 export async function GET(request: Request) {
@@ -15,5 +17,11 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
 
   if (!id) return apiResponse(false, 404, 'Could not find such user!', null)
 
-  return NextResponse.json({ data: request?.url })
+  const checkUserExists = await prisma.user.findUnique({ where: { id: id } })
+
+  if (!checkUserExists) return apiResponse(false, 404, 'Could not find such user!', null)
+
+  await prisma.user?.update({ where: { id: id }, data: { isDeleted: true } })
+
+  return apiResponse(true, 201, 'User deleted successfully!', null)
 }

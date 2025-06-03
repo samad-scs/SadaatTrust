@@ -14,12 +14,14 @@ export async function GET(request: Request) {
       prisma.user.findMany({
         skip: (page - 1) * pageSize,
         where: {
+          isSuperAdmin: false,
           isDeleted: { not: true }
         },
         take: pageSize
       }),
       prisma.user.count({
         where: {
+          isSuperAdmin: false,
           isDeleted: { not: true }
         }
       })
