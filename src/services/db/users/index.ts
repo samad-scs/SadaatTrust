@@ -32,6 +32,21 @@ export const createNewAdminUserAPI = async (body: any) => {
   }
 }
 
+export const updateAdminUserAPI = async (id: string, body: any) => {
+  try {
+    const response = await axios.put(eps?.update + id, body)
+    if (!response.data?.status) throw new Error(response.data?.message || 'Failed to update user')
+
+    toast.success(response?.data?.message || 'User updated successfully')
+
+    return response.data
+  } catch (error: any) {
+    toast.error(error || 'Failed to update user')
+
+    return null
+  }
+}
+
 export const deleteAdminUser = async (id: string) => {
   try {
     const response = await axios.delete(eps?.deleteItem + id)

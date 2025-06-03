@@ -6,12 +6,14 @@ import { User } from '@prisma/client'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
-import { createNewAdminUserAPI } from '@/services/db/users'
+import { createNewAdminUserAPI, updateAdminUserAPI } from '@/services/db/users'
 
 interface AdminUserFormProps {
   open: boolean
@@ -43,7 +45,8 @@ const formSchema = z.object({
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, {
       message:
         'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
-    }),
+    })
+    .optional(),
   canViewData: z.boolean().optional()
 })
 
@@ -68,6 +71,14 @@ const AdminUserForm: React.FC<AdminUserFormProps> = ({ open, setOpen, refetch, e
 
   const onSubmit = async (formData: FormType) => {
     if (!!editData) {
+      const response = await updateAdminUserAPI(editData?.id, formData)
+      console.log('response :', response)
+
+      if (response?.status) {
+        setOpen(false)
+        refetch()
+      }
+
       return
     }
 
@@ -204,6 +215,29 @@ const AdminUserForm: React.FC<AdminUserFormProps> = ({ open, setOpen, refetch, e
                   />
                 </div>
               )}
+
+              {/* Permission */}
+              <FormField
+                control={form.control}
+                name='canViewData'
+                render={({ field }) => (
+                  <Label className='hover:bg-accent/10 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-amber-500 has-[[aria-checked=true]]:bg-amber-50 dark:has-[[aria-checked=true]]:border-amber-800 dark:has-[[aria-checked=true]]:bg-amber-950'>
+                    <Checkbox
+                      id='toggle-2'
+                      checked={field?.value}
+                      onCheckedChange={field.onChange}
+                      className='data-[state=checked]:border-amber-500 data-[state=checked]:bg-amber-500 data-[state=checked]:text-white dark:data-[state=checked]:border-amber-600 dark:data-[state=checked]:bg-amber-600'
+                    />
+                    <div className='grid gap-1.5 font-normal'>
+                      <p className='text-sm leading-none font-medium'>Grant Data Permission</p>
+                      <p className='text-muted-foreground text-sm'>
+                        Only enable this for users whom you want the data to be shared with! If set to false then the
+                        user will only be able to create and update benificiary.
+                      </p>
+                    </div>
+                  </Label>
+                )}
+              />
             </div>
             <SheetFooter className='flex flex-col gap-3 md:flex-row-reverse md:justify-between md:items-center w-full'>
               <Button type='submit' disabled={isSubmitting}>
