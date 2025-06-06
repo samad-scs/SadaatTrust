@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertTriangle, ChevronLeft, UserPlus } from 'lucide-react'
+import { AlertTriangle, ChevronLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
@@ -195,10 +195,6 @@ export default function PersonForm() {
     console.log('Form submitted:', data)
     setSavedPersons([...savedPersons, data])
     toast('Person Saved')
-  }
-
-  function resetForm() {
-    form.reset(defaultValues)
   }
 
   const handleDependentChildrenChange = (value: string) => {
@@ -1502,29 +1498,16 @@ export default function PersonForm() {
           </Card>
 
           {/* Form Actions */}
-          <div className='flex gap-4 items-center justify-between'>
+          <div className='flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between'>
             <Button type='button' variant='outline' onClick={() => router.back()}>
               <ChevronLeft className='h-4 w-4 mr-2' />
 
               {'Go Back'}
             </Button>
-            <div className='flex items-center gap-4'>
-              <Button
-                type='button'
-                variant='outline'
-                onClick={() => {
-                  onSubmit(form.getValues())
-                  resetForm()
-                }}
-                className=''
-              >
-                <UserPlus className='h-4 w-4 mr-2' />
-                {t('common.addAnother')}
-              </Button>
-              <Button type='submit' className=''>
-                {t('common.save')}
-              </Button>
-            </div>
+
+            <Button type='submit' className=''>
+              {t('common.save')}
+            </Button>
           </div>
         </form>
       </Form>
