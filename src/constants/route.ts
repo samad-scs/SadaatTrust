@@ -1,4 +1,6 @@
 export const routes = {
   dashboard: '/dashboard',
-  users: '/users'
+  users: '/users',
+  beneficiary: '/beneficiary',
+  beneficiaryCreate: '/beneficiary/create'
 }
