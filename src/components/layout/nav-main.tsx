@@ -1,9 +1,10 @@
 'use client'
 
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { type Icon } from '@tabler/icons-react'
+import { MenuDataType } from '@/data/menu-data'
 
 import {
   SidebarGroup,
@@ -14,21 +15,26 @@ import {
 } from '@/components/ui/sidebar'
 
 interface NavMainProps {
-  items: {
-    title: string
-    url: string
-    icon?: Icon
-  }[]
+  items: MenuDataType[]
 }
 
 export function NavMain({ items }: NavMainProps) {
   const pathname = usePathname()
+  const session = useSession()
+
+  const itemFilter = (item: MenuDataType) => {
+    if (item?.protected) {
+      return session?.data?.user?.canViewData === true
+    }
+
+    return true
+  }
 
   return (
     <SidebarGroup>
       <SidebarGroupContent className='flex flex-col gap-2'>
         <SidebarMenu>
-          {items.map(item => (
+          {items?.filter(itemFilter).map(item => (
             <SidebarMenuItem key={item.title}>
               <Link href={item?.url}>
                 <SidebarMenuButton isActive={pathname?.startsWith(item?.url)} tooltip={item.title}>

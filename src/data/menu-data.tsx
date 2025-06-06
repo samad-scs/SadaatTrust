@@ -1,8 +1,16 @@
 import { IconDashboard, IconUser, IconUserShield } from '@tabler/icons-react'
+import { type Icon } from '@tabler/icons-react'
 
 import { routes } from '@/constants/route'
 
-export const menuData = [
+export interface MenuDataType {
+  title: string
+  url: string
+  protected?: boolean
+  icon: Icon
+}
+
+export const menuData: MenuDataType[] = [
   {
     title: 'Dashboard',
     url: routes.dashboard,
@@ -11,6 +19,7 @@ export const menuData = [
   {
     title: 'Admin Users',
     url: routes.users,
+    protected: true,
     icon: IconUserShield
   },
   {

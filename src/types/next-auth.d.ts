@@ -8,6 +8,7 @@ declare module 'next-auth' {
     name: string
     gender: string
     phone: string
+    canViewData: boolean
   }
 
   interface Session {
@@ -15,6 +16,7 @@ declare module 'next-auth' {
       id: string
       email: string
       name: string
+      canViewData: boolean
     } & DefaultSession['user']
   }
 }
@@ -27,6 +29,7 @@ declare module 'next-auth/jwt' {
     gender?: string
     phone?: string
     encrypted?: string
+    canViewData?: boolean
   }
 }
 
@@ -37,5 +40,6 @@ declare module '@auth/core/adapters' {
     name: string
     gender: string
     phone: string
+    canViewData: boolean
   }
 }
