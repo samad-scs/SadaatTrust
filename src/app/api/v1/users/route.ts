@@ -17,6 +17,7 @@ export async function GET(request: Request) {
           isSuperAdmin: false,
           isDeleted: { not: true }
         },
+        orderBy: { createdAt: 'desc' },
         take: pageSize
       }),
       prisma.user.count({
@@ -61,6 +62,6 @@ export async function POST(request: Request) {
       { status: 200 }
     )
   } catch (error) {
-    console.log('error :', error)
+    console.error('error :', error)
   }
 }
