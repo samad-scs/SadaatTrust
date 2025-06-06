@@ -4,7 +4,7 @@ import { SessionProvider } from 'next-auth/react'
 
 import ClientProviders from './client-provider'
 
-const Providers = ({ children }: { children: React.ReactNode }) => {
+const Providers = async ({ children }: { children: React.ReactNode }) => {
   return (
     <SessionProvider>
       <ClientProviders>{children}</ClientProviders>
