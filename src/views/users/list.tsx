@@ -2,13 +2,15 @@
 
 import { memo, useState } from 'react'
 
+import { useSession } from 'next-auth/react'
+
 import { User } from '@prisma/client'
 import { IconDotsVertical } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table'
 import dayjs from 'dayjs'
 import { debounce } from 'lodash'
-import { PlusIcon } from 'lucide-react'
+import { LockIcon, PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -28,10 +30,12 @@ import { deleteAdminUser, fetchUsersList, updateAdminUserStatusAPI } from '@/ser
 import { showAlert } from '@utils/alert'
 
 import AdminUserForm from './form'
+import UpdatePasswordDialog from './update-password'
 
 const RowActions = ({ data, refetch }: { data: User; refetch: () => void }) => {
   const [open, setOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [updatePasswordOpen, setUpdatePasswordOpen] = useState(false)
 
   const handleDelete = async () => {
     showAlert({
@@ -57,16 +61,30 @@ const RowActions = ({ data, refetch }: { data: User; refetch: () => void }) => {
             <span className='sr-only'>Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align='end' className='w-32'>
-          <DropdownMenuItem onClick={() => setOpen(true)}>Edit</DropdownMenuItem>
+        <DropdownMenuContent align='end' className='w-44'>
+          <DropdownMenuItem onClick={() => setOpen(true)}>
+            <PencilIcon />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setUpdatePasswordOpen(true)}>
+            <LockIcon />
+            Update Password
+          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleDelete} variant='destructive'>
+            <Trash2Icon />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AdminUserForm open={open} setOpen={setOpen} refetch={refetch} editData={data} />
+      <UpdatePasswordDialog
+        open={updatePasswordOpen}
+        setOpen={setUpdatePasswordOpen}
+        refetch={refetch}
+        editData={data}
+      />
     </>
   )
 }
@@ -74,6 +92,7 @@ const RowActions = ({ data, refetch }: { data: User; refetch: () => void }) => {
 const UserList = () => {
   const [page, setPage] = useState(1)
   const pageSize = 10
+  const session = useSession()
 
   const [openAddForm, setOpenAddForm] = useState(false)
 
@@ -112,7 +131,7 @@ const UserList = () => {
       cell: ({ row }) => (
         <div className='min-w-36'>
           <Switch
-            disabled={row?.original?.isSuperAdmin}
+            disabled={row?.original?.isSuperAdmin || session?.data?.user?.id === row?.original?.id}
             onCheckedChange={value => debouncedStatusChange(row?.original?.id, value)}
             defaultChecked={!!row?.original?.status}
           />

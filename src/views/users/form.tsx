@@ -72,7 +72,6 @@ const AdminUserForm: React.FC<AdminUserFormProps> = ({ open, setOpen, refetch, e
   const onSubmit = async (formData: FormType) => {
     if (!!editData) {
       const response = await updateAdminUserAPI(editData?.id, formData)
-      console.log('response :', response)
 
       if (response?.status) {
         setOpen(false)

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { signIn } from 'next-auth/react'
@@ -7,6 +8,7 @@ import { useSearchParams } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -26,6 +28,7 @@ const formSchema = z.object({
 
 function LoginForm({ className }: React.ComponentProps<'form'>) {
   const searchParams = useSearchParams()
+  const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,7 +94,18 @@ function LoginForm({ className }: React.ComponentProps<'form'>) {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type='password' {...field} />
+                    <div className='relative'>
+                      <Input type={showPassword ? 'text' : 'password'} placeholder='Enter new password' {...field} />
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='sm'
+                        className='absolute right-0 top-0 h-full px-3'
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <EyeOff className='h-4 w-4' /> : <Eye className='h-4 w-4' />}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

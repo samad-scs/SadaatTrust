@@ -56,6 +56,21 @@ export const updateAdminUserAPI = async (id: string, body: any) => {
   }
 }
 
+export const updateAdminPasswordAPI = async (id: string, body: any) => {
+  try {
+    const response = await axios.put(eps?.update + id + '/password-change', body)
+    if (!response.data?.status) throw new Error(response.data?.message || 'Failed to update user')
+
+    toast.success(response?.data?.message || 'User updated successfully')
+
+    return response.data
+  } catch (error: any) {
+    toast.error(typeof error == 'string' ? error : 'Failed to update user')
+
+    return null
+  }
+}
+
 export const updateAdminUserStatusAPI = async (id: string, status: boolean) => {
   try {
     const response = await axios.patch(eps?.updateStatus + id, { status })
