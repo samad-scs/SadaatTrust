@@ -11,7 +11,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Sadaat Trust',
-  description: 'Trust that helps people in need in Thasara Saiyed Samaaj'
+  description: 'Trust that helps people in need in Thasra Saiyed Samaaj'
 }
 
 interface RootLayoutProps {
