@@ -91,11 +91,11 @@ export const deleteBeneficiary = async (id: string) => {
   try {
     if (!id) return serverActionResponse(false, 'Could not find such user!', null)
 
-    const checkUserExists = await prisma.user.findUnique({ where: { id: id } })
+    const checkUserExists = await prisma.beneficiary.findUnique({ where: { id: id } })
 
     if (!checkUserExists) return serverActionResponse(false, 'Could not find such user!', null)
 
-    await prisma.user?.update({ where: { id: id }, data: { isDeleted: true } })
+    await prisma.beneficiary?.update({ where: { id: id }, data: { isDeleted: true } })
 
     return serverActionResponse(true, 'Beneficiary deleted successfully!', null)
   } catch (error) {

@@ -42,7 +42,11 @@ const RowActions = ({ data, refetch }: { data: Beneficiary; refetch: () => void 
     }).then(async value => {
       if (value?.isConfirmed) {
         await deleteBeneficiary(data?.id).then(res => {
-          toast.success(res?.message)
+          if (res?.status) {
+            toast.success(res?.message)
+          } else {
+            toast.error(res?.message)
+          }
         })
         refetch()
       }
