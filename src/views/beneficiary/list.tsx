@@ -59,10 +59,12 @@ const RowActions = ({ data, refetch }: { data: Beneficiary; refetch: () => void 
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-44'>
-          <DropdownMenuItem>
-            <EyeIcon />
-            View
-          </DropdownMenuItem>
+          <Link href={routes.beneficiaryDetails + data?.id}>
+            <DropdownMenuItem>
+              <EyeIcon />
+              View
+            </DropdownMenuItem>
+          </Link>
 
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleDelete} variant='destructive'>
@@ -89,7 +91,15 @@ const BeneficiaryList = () => {
     {
       accessorKey: 'name',
       header: 'Name',
-      cell: ({ row }) => <div className='font-medium min-w-32'>{row.original.name}</div>
+      cell: ({ row }) => (
+        <div className='font-medium min-w-32'>
+          <p className='w-min'>
+            <Link className='w-min' href={routes.beneficiaryDetails + row.original?.id}>
+              {row.original.name}
+            </Link>
+          </p>
+        </div>
+      )
     },
     {
       accessorKey: 'email',
