@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
+import { NumberInput } from '@/components/ui/number-input'
 import { handleUpperCaseChange } from '../form.schema'
 
 const BasicInformation = () => {
@@ -78,7 +79,7 @@ const BasicInformation = () => {
               <FormItem>
                 <FormLabel>{t('basic.mobile')}</FormLabel>
                 <FormControl>
-                  <Input {...field} maxLength={10} />
+                  <NumberInput inputMode='numeric' {...field} maxLength={10} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
