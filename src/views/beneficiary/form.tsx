@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChevronLeft } from 'lucide-react'
 import { toast } from 'sonner'
-import { v4 as uuidv4 } from 'uuid'
 
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
+
+import { addBeneficiary } from '@/services/beneficiary'
 
 import AdditionalComment from './form-components/additional-comments'
 import AdultInformation from './form-components/adult-information'
@@ -26,7 +27,6 @@ import HealthInformation from './form-components/health-information'
 import { BeneficiaryFormValues, beneficiaryFormSchema } from './form.schema'
 
 const defaultValues: BeneficiaryFormValues = {
-  id: uuidv4(),
   name: '',
   age: '',
   gender: 'male',
@@ -55,9 +55,9 @@ const defaultValues: BeneficiaryFormValues = {
   healthCondition: 'good',
   chronicIllnesses: '',
   medication: '',
-  healthInsurance: '',
+  healthInsurance: undefined,
   insuranceType: '',
-  disability: '',
+  disability: undefined,
   disabilityType: '',
   medicalExpenses: '0',
   rationCardType: 'none',
@@ -88,9 +88,17 @@ export default function PersonForm() {
   const isEmployed = employmentStatus === 'employed'
   const isStudent = employmentStatus === 'student' || educationStatus === 'studying'
 
-  function onSubmit(data: BeneficiaryFormValues) {
-    console.log('Form submitted:', data)
-    toast('Person Saved')
+  async function onSubmit(data: BeneficiaryFormValues) {
+    try {
+      const response = await addBeneficiary(data)
+
+      if (!!response) {
+        toast.success('Beneficiary Added Successfully')
+        router?.back()
+      }
+    } catch (error) {
+      console.error('error: onSubmit', error)
+    }
   }
 
   return (

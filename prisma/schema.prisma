@@ -105,8 +105,8 @@ model Beneficiary {
   parentId String?
 
   // Education
-  dependencyStatus DependencyStatus
-  educationLevel   EducationLevel
+  dependencyStatus DependencyStatus?
+  educationLevel   EducationLevel?
   educationStatus  EducationStatus?
   institution      String?
   droppedReason    String?
@@ -124,6 +124,9 @@ model Beneficiary {
   spouseOccupation            String?
   numberOfDependentChildren   Int?
   numberOfIndependentChildren Int?
+  extraClasses                String?
+  educationExpense            Int?
+  lastResultPercentage        Int?
 
   // Economic Status
   familyIncome        String?

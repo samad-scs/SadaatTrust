@@ -22,13 +22,13 @@ const educationStatusEnum = z.enum(['studying', 'completed', 'dropped'])
 
 const employmentStatusEnum = z.enum(['employed', 'unemployed', 'part-time', 'homemaker', 'student', 'retired'])
 
-const employmentTypeEnum = z.enum(['agriculture', 'government', 'private', 'self-employed', 'daily-wage', 'shop']).optional()
+const employmentTypeEnum = z
+  .enum(['agriculture', 'government', 'private', 'self-employed', 'daily-wage', 'shop'])
+  .optional()
 
 const housingStatusEnum = z.enum(['owned', 'rented', 'other'])
 
 export const beneficiaryFormSchema = z.object({
-  id: z.string(),
-
   name: z
     .string()
     .min(2, { message: 'Name must be at least 2 characters' })
@@ -39,7 +39,7 @@ export const beneficiaryFormSchema = z.object({
   }),
 
   gender: genderEnum,
-  mobile: z.string().optional(),
+  mobile: z.string(),
   address: z.string().min(5, { message: 'Address must be at least 5 characters' }),
 
   // Education
@@ -73,7 +73,7 @@ export const beneficiaryFormSchema = z.object({
         maritalStatus: maritalStatusEnum.optional(),
         educationStatus: educationStatusEnum,
         extraClasses: z.string().optional(),
-        monthlyExpense: z.string().optional(),
+        educationExpense: z.string().optional(),
         lastResultPercentage: z.string().optional(),
         droppedReason: z.string().optional(),
         employmentStatus: employmentStatusEnum,
@@ -95,9 +95,9 @@ export const beneficiaryFormSchema = z.object({
   healthCondition: healthConditionEnum,
   chronicIllnesses: z.string().optional(),
   medication: z.string().optional(),
-  healthInsurance: z.string().optional(),
+  healthInsurance: z.enum(['yes', 'no']).optional(),
   insuranceType: z.string().optional(),
-  disability: z.string().optional(),
+  disability: z.enum(['yes', 'no']).optional(),
   disabilityType: z.string().optional(),
   medicalExpenses: z.string().optional(),
 

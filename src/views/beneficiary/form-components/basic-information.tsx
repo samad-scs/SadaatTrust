@@ -91,7 +91,11 @@ const BasicInformation = () => {
               <FormItem className='md:col-span-2'>
                 <FormLabel>{t('basic.address')}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} onChange={(e) => handleUpperCaseChange(field?.onChange)(e as any)} maxLength={300} />
+                  <Textarea
+                    {...field}
+                    onChange={e => handleUpperCaseChange(field?.onChange)(e as any)}
+                    maxLength={300}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
