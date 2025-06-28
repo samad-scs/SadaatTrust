@@ -54,3 +54,104 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Household {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  members Beneficiary[]
+}
+
+model Beneficiary {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  birthYear        Int
+  gender           String // Should be Zod enum: "male" | "female" | "other"
+  maritalStatus    String? // Should be Zod enum
+  dependencyStatus String // Zod enum: "dependent" | "independent"
+  parentId         String?
+  householdId      String? @db.ObjectId
+  address          String
+
+  // Education
+  educationLevel  String // Zod enum
+  educationStatus String?
+  institution     String?
+  droppedReason     String?
+
+  // Employment
+  employmentStatus String // Zod enum
+  employmentType   String?
+  occupation       String?
+  monthlyIncome    String?
+
+  // Family Information
+  spouseName                  String?
+  spouseBirthYear             Int?
+  spouseOccupation            String?
+  numberOfDependentChildren   Int?
+  numberOfIndependentChildren Int?
+
+  // Economic Status
+  familyIncome        String?
+  earningMembers      String?
+  primaryIncomeSource String?
+  housingStatus       String?
+  monthlyRent         String?
+  assetIds            String[]
+
+  // Health Information
+  healthCondition  String?
+  chronicIllnesses String?
+  medication       String?
+  healthInsurance  Boolean? // Converted from String
+  insuranceType    String?
+  disability       Boolean? // Converted from String
+  disabilityType   String?
+  medicalExpenses  String?
+
+  // Government Benefits
+  bplCard             String?
+  rationCardType      String?
+  governmentSchemeIds String[]
+  assistanceNeedIds   String[]
+  priorityLevel       String?
+
+  // Comments
+  comments String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  household Household? @relation(fields: [householdId], references: [id])
+}
+
+model GovernmentScheme {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AssistanceNeed {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Asset {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

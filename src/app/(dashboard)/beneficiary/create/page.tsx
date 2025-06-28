@@ -4,7 +4,7 @@ import { routes } from '@/constants/route'
 
 import BreadcrumbComponent from '@/components/custom/breadcrumb'
 
-import PersonForm from '@/views/beneficiary/person-form'
+import PersonForm from '@/views/beneficiary/form'
 
 const CreatePage = () => {
   return (
