@@ -96,13 +96,14 @@ enum ConditionalEnum {
 }
 
 model Beneficiary {
-  id       String     @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  age      Int
-  gender   GenderEnum
-  mobile   String
-  address  String
-  parentId String?
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  isDeleted Boolean    @default(false)
+  name      String
+  age       Int
+  gender    GenderEnum
+  mobile    String
+  address   String
+  parentId  String?
 
   // Education
   dependencyStatus DependencyStatus?

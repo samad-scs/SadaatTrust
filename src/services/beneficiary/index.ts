@@ -4,6 +4,37 @@ import { prisma } from '@/prisma'
 
 import { BeneficiaryFormValues } from '@/views/beneficiary/form.schema'
 
+import { serverActionResponse } from '@utils/index'
+
+export const fetchBeneficiaryList = async ({ page, pageSize }: { page: number; pageSize: number }) => {
+  try {
+    const [users, total] = await Promise.all([
+      prisma.beneficiary.findMany({
+        skip: (page - 1) * pageSize,
+        where: {
+          dependencyStatus: 'independent',
+          isDeleted: { not: true }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: pageSize
+      }),
+      prisma.beneficiary.count({
+        where: {
+          dependencyStatus: 'independent',
+          isDeleted: { not: true }
+        }
+      })
+    ])
+
+    return {
+      users,
+      totalPages: Math.ceil(total / pageSize)
+    }
+  } catch {
+    return null
+  }
+}
+
 export const addBeneficiary = async (body: BeneficiaryFormValues) => {
   try {
     let dependentChildrenArray: BeneficiaryFormValues['dependentChildren'] = []
@@ -53,5 +84,23 @@ export const addBeneficiary = async (body: BeneficiaryFormValues) => {
     console.log('error', error)
 
     return null
+  }
+}
+
+export const deleteBeneficiary = async (id: string) => {
+  try {
+    if (!id) return serverActionResponse(false, 'Could not find such user!', null)
+
+    const checkUserExists = await prisma.user.findUnique({ where: { id: id } })
+
+    if (!checkUserExists) return serverActionResponse(false, 'Could not find such user!', null)
+
+    await prisma.user?.update({ where: { id: id }, data: { isDeleted: true } })
+
+    return serverActionResponse(true, 'Beneficiary deleted successfully!', null)
+  } catch (error) {
+    console.log('error delete', error)
+
+    return serverActionResponse(false, 'Failed to delete a user!', null)
   }
 }

@@ -88,6 +88,8 @@ export default function PersonForm() {
   const isEmployed = employmentStatus === 'employed'
   const isStudent = employmentStatus === 'student' || educationStatus === 'studying'
 
+  const { isSubmitting } = form?.formState
+
   async function onSubmit(data: BeneficiaryFormValues) {
     try {
       const response = await addBeneficiary(data)
@@ -144,7 +146,7 @@ export default function PersonForm() {
             </Button>
 
             <Button type='submit' className=''>
-              {t('common.save')}
+              {isSubmitting ? 'Saving...' : t('common.save')}
             </Button>
           </div>
         </form>
