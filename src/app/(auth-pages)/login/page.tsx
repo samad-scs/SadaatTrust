@@ -29,6 +29,7 @@ export default function LoginPage() {
           fill
           priority
           sizes={'50vw'}
+          draggable={false}
           alt='Image'
           className='absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale'
         />

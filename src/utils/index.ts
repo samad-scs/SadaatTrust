@@ -85,3 +85,7 @@ export const defaultFormatTime = 'DD MMM, YYYY h:mm A'
 export const apiResponse = (status: boolean, statusCode: number, message: string, data?: any) => {
   return NextResponse.json({ data: data || null, status, statusCode, message })
 }
+
+export const serverActionResponse = (status: boolean, message: string, data?: any) => {
+  return { data: data || null, status, message }
+}

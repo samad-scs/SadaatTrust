@@ -54,3 +54,108 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+enum GenderEnum {
+  male
+  female
+  other
+}
+
+enum DependencyStatus {
+  dependent
+  independent
+}
+
+enum EducationLevel {
+  noEducation
+  primary
+  secondary
+  higher
+  graduate
+  postgraduate
+  doctorate
+}
+
+enum EducationStatus {
+  studying
+  completed
+  dropped
+}
+
+enum MaritalStatus {
+  married
+  single
+  widowed
+  divorced
+  separated
+}
+
+enum ConditionalEnum {
+  yes
+  no
+}
+
+model Beneficiary {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  isDeleted Boolean    @default(false)
+  name      String
+  age       Int
+  gender    GenderEnum
+  mobile    String
+  address   String
+  parentId  String?
+
+  // Education
+  dependencyStatus DependencyStatus?
+  educationLevel   EducationLevel?
+  educationStatus  EducationStatus?
+  institution      String?
+  droppedReason    String?
+
+  // Employment
+  employmentStatus String // Zod enum
+  employmentType   String?
+  occupation       String?
+  monthlyIncome    String?
+
+  // Family Information
+  maritalStatus               MaritalStatus?
+  spouseName                  String?
+  spouseAge                   Int?
+  spouseOccupation            String?
+  numberOfDependentChildren   Int?
+  numberOfIndependentChildren Int?
+  extraClasses                String?
+  educationExpense            Int?
+  lastResultPercentage        Int?
+
+  // Economic Status
+  familyIncome        String?
+  earningMembers      String?
+  primaryIncomeSource String?
+  housingStatus       String?
+  monthlyRent         String?
+  assets              String[]
+
+  // Health Information
+  healthCondition  String?
+  chronicIllnesses String?
+  medication       String?
+  healthInsurance  ConditionalEnum?
+  insuranceType    String?
+  disability       ConditionalEnum?
+  disabilityType   String?
+  medicalExpenses  String?
+
+  // Government Benefits
+  rationCardType    String?
+  governmentSchemes String[]
+  assistanceNeeds   String[]
+  priorityLevel     String?
+
+  // Comments
+  comments String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

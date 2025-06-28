@@ -51,7 +51,8 @@
     "studying": "वर्तमान में पढ़ाई कर रहे हैं",
     "completed": "शिक्षा पूरी की",
     "dropped": "पढ़ाई छोड़ दी",
-    "institution": "शैक्षिक संस्थान"
+    "institution": "शैक्षिक संस्थान",
+    "droppedReason": "छोड़ने का कारण"
   },
   "employment": {
     "title": "रोजगार",
