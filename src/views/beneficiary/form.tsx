@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useTranslations } from 'next-intl'
@@ -60,7 +59,7 @@ const defaultValues: BeneficiaryFormValues = {
   insuranceType: '',
   disability: '',
   disabilityType: '',
-  medicalExpenses: '',
+  medicalExpenses: '0',
   rationCardType: 'none',
   governmentSchemes: [],
   assistanceNeeds: [],
@@ -71,7 +70,6 @@ const defaultValues: BeneficiaryFormValues = {
 export default function PersonForm() {
   const t = useTranslations()
   const router = useRouter()
-  const [showAlert] = useState<string | null>(null)
 
   const form = useForm<BeneficiaryFormValues>({
     resolver: zodResolver(beneficiaryFormSchema),
@@ -91,11 +89,6 @@ export default function PersonForm() {
   const isStudent = employmentStatus === 'student' || educationStatus === 'studying'
 
   function onSubmit(data: BeneficiaryFormValues) {
-    // Check for validation issues
-    if (showAlert === 'marriedEmployedDependent') {
-      toast('Please resolve the validation issues before saving')
-    }
-
     console.log('Form submitted:', data)
     toast('Person Saved')
   }

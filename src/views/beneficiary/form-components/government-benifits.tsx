@@ -2,6 +2,8 @@ import { useFormContext } from 'react-hook-form'
 
 import { useTranslations } from 'next-intl'
 
+import { govtSchemes } from '@/data/gov-schemes'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -51,7 +53,7 @@ const GovernmentBenifits = () => {
                   <FormLabel>{t('benefits.schemes')}</FormLabel>
                 </div>
 
-                {['Pension', 'PMAY', 'Gas', 'Toilet', 'Other'].map(item => (
+                {govtSchemes.map(item => (
                   <FormField
                     key={item}
                     control={form.control}

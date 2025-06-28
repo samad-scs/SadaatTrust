@@ -55,32 +55,61 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Household {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum GenderEnum {
+  male
+  female
+  other
+}
 
-  // Relations
-  members Beneficiary[]
+enum DependencyStatus {
+  dependent
+  independent
+}
+
+enum EducationLevel {
+  noEducation
+  primary
+  secondary
+  higher
+  graduate
+  postgraduate
+  doctorate
+}
+
+enum EducationStatus {
+  studying
+  completed
+  dropped
+}
+
+enum MaritalStatus {
+  married
+  single
+  widowed
+  divorced
+  separated
+}
+
+enum ConditionalEnum {
+  yes
+  no
 }
 
 model Beneficiary {
-  id               String  @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  birthYear        Int
-  gender           String // Should be Zod enum: "male" | "female" | "other"
-  maritalStatus    String? // Should be Zod enum
-  dependencyStatus String // Zod enum: "dependent" | "independent"
-  parentId         String?
-  householdId      String? @db.ObjectId
-  address          String
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  age      Int
+  gender   GenderEnum
+  mobile   String
+  address  String
+  parentId String?
 
   // Education
-  educationLevel  String // Zod enum
-  educationStatus String?
-  institution     String?
-  droppedReason     String?
+  dependencyStatus DependencyStatus
+  educationLevel   EducationLevel
+  educationStatus  EducationStatus?
+  institution      String?
+  droppedReason    String?
 
   // Employment
   employmentStatus String // Zod enum
@@ -89,8 +118,9 @@ model Beneficiary {
   monthlyIncome    String?
 
   // Family Information
+  maritalStatus               MaritalStatus?
   spouseName                  String?
-  spouseBirthYear             Int?
+  spouseAge                   Int?
   spouseOccupation            String?
   numberOfDependentChildren   Int?
   numberOfIndependentChildren Int?
@@ -101,57 +131,27 @@ model Beneficiary {
   primaryIncomeSource String?
   housingStatus       String?
   monthlyRent         String?
-  assetIds            String[]
+  assets              String[]
 
   // Health Information
   healthCondition  String?
   chronicIllnesses String?
   medication       String?
-  healthInsurance  Boolean? // Converted from String
+  healthInsurance  ConditionalEnum?
   insuranceType    String?
-  disability       Boolean? // Converted from String
+  disability       ConditionalEnum?
   disabilityType   String?
   medicalExpenses  String?
 
   // Government Benefits
-  bplCard             String?
-  rationCardType      String?
-  governmentSchemeIds String[]
-  assistanceNeedIds   String[]
-  priorityLevel       String?
+  rationCardType    String?
+  governmentSchemes String[]
+  assistanceNeeds   String[]
+  priorityLevel     String?
 
   // Comments
   comments String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  household Household? @relation(fields: [householdId], references: [id])
-}
-
-model GovernmentScheme {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String   @unique
-  description String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model AssistanceNeed {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String   @unique
-  description String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Asset {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @unique
-  active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

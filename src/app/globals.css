@@ -149,3 +149,7 @@
     background-size: 21px 21px;
   }
 }
+
+*::-webkit-scrollbar {
+  display: none;
+}

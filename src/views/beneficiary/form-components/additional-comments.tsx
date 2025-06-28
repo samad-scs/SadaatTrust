@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
 
+import { handleUpperCaseChange } from '../form.schema'
+
 const AdditionalComment = () => {
   const form = useFormContext()
   const t = useTranslations()
@@ -22,7 +24,12 @@ const AdditionalComment = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Textarea rows={6} {...field} />
+                <Textarea
+                  rows={6}
+                  {...field}
+                  onChange={e => handleUpperCaseChange(field?.onChange)(e as any)}
+                  maxLength={300}
+                />
               </FormControl>
               <FormDescription>{t('common.optional')}</FormDescription>
               <FormMessage />
