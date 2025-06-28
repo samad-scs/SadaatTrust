@@ -28,7 +28,7 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
           <ThemeProvider attribute='class' defaultTheme='dark'>
             <NextProgress />
             <Providers>{children}</Providers>
-            <Toaster position='top-right' closeButton />
+            <Toaster position='top-right' closeButton richColors />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

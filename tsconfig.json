@@ -27,6 +27,6 @@
     }
   },
   "typeRoots": ["./src/types", "./node_modules/@types"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "seeder/functions/super-admin.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "seeder/functions/fire.js"],
   "exclude": ["node_modules"]
 }

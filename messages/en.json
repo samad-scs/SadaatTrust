@@ -51,7 +51,8 @@
     "studying": "Currently Studying",
     "completed": "Education Completed",
     "dropped": "Dropped Out",
-    "institution": "Educational Institution"
+    "institution": "Educational Institution",
+    "droppedReason": "Reason for dropping"
   },
   "employment": {
     "title": "Employment",
