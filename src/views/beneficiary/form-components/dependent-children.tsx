@@ -158,7 +158,7 @@ const DependentChildrenForm = ({ index }: { index: number }) => {
               />
               <FormField
                 control={form.control}
-                name={`dependentChildren.${index}.monthlyExpense`}
+                name={`dependentChildren.${index}.educationExpense`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Monthly Education Expense (₹)</FormLabel>
