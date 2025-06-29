@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/number-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
@@ -78,7 +79,7 @@ const BasicInformation = () => {
               <FormItem>
                 <FormLabel>{t('basic.mobile')}</FormLabel>
                 <FormControl>
-                  <Input {...field} maxLength={10} />
+                  <NumberInput inputMode='numeric' {...field} maxLength={10} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

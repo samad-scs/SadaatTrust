@@ -47,6 +47,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.511.0",
     "mongodb": "^6.16.0",
+    "motion": "^12.19.2",
     "next": "15.3.3",
     "next-auth": "^5.0.0-beta.28",
     "next-intl": "^4.1.0",

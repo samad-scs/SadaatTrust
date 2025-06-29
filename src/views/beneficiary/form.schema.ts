@@ -26,7 +26,7 @@ const employmentTypeEnum = z
   .enum(['agriculture', 'government', 'private', 'self-employed', 'daily-wage', 'shop'])
   .optional()
 
-const housingStatusEnum = z.enum(['owned', 'rented', 'other'])
+const housingStatusEnum = z.enum(['owned', 'rented', 'family'])
 
 export const beneficiaryFormSchema = z.object({
   name: z
@@ -58,7 +58,7 @@ export const beneficiaryFormSchema = z.object({
   maritalStatus: maritalStatusEnum.optional(),
 
   // Family Information (if married)
-  spouseName: z.string().regex(pattern.alphaAllowed, { message: 'Name can only contain alphabets' }).optional(),
+  spouseName: z.string().optional(),
   spouseAge: z.string().optional(),
   spouseOccupation: z.string().optional(),
   numberOfDependentChildren: z.string().optional(),
@@ -109,7 +109,8 @@ export const beneficiaryFormSchema = z.object({
   priorityLevel: z.string().optional(),
 
   // Comments
-  comments: z.string().optional()
+  comments: z.string().optional(),
+  createdBy: z.string().optional()
 })
 
 export type BeneficiaryFormValues = z.infer<typeof beneficiaryFormSchema>
