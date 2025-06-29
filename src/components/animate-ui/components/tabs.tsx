@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
 import * as React from 'react'
@@ -7,13 +8,13 @@ import { type HTMLMotionProps, type Transition, motion } from 'motion/react'
 
 import { MotionHighlight, MotionHighlightItem } from '@/components/animate-ui/effects/motion-highlight'
 
+
 type TabsContextType<T extends string> = {
   activeValue: T
   handleValueChange: (value: T) => void
   registerTrigger: (value: T, node: HTMLElement | null) => void
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TabsContext = React.createContext<TabsContextType<any> | undefined>(undefined)
 
 function useTabs<T extends string = string>(): TabsContextType<T> {
@@ -21,6 +22,7 @@ function useTabs<T extends string = string>(): TabsContextType<T> {
   if (!context) {
     throw new Error('useTabs must be used within a TabsProvider')
   }
+
   return context
 }
 
@@ -149,6 +151,7 @@ function TabsTrigger({ ref, value, children, className, ...props }: TabsTriggerP
 
   React.useEffect(() => {
     registerTrigger(value, localRef.current)
+    
     return () => registerTrigger(value, null)
   }, [value, registerTrigger])
 
@@ -192,6 +195,7 @@ function TabsContents({
 }: TabsContentsProps) {
   const { activeValue } = useTabs()
   const childrenArray = React.Children.toArray(children)
+
   const activeIndex = childrenArray.findIndex(
     (child): child is React.ReactElement<{ value: string }> =>
       React.isValidElement(child) &&
@@ -222,6 +226,7 @@ type TabsContentProps = HTMLMotionProps<'div'> & {
 function TabsContent({ children, value, className, ...props }: TabsContentProps) {
   const { activeValue } = useTabs()
   const isActive = activeValue === value
+
   return (
     <motion.div
       role='tabpanel'
