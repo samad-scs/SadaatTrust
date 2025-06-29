@@ -158,6 +158,9 @@ model Beneficiary {
   // Comments
   comments String?
 
+  // Score
+  assessmentScore Int?
+
   createdBy String? @db.ObjectId
   updatedBy String? @db.ObjectId
   creator   User?   @relation("BeneficiaryCreatedBy", fields: [createdBy], references: [id])

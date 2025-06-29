@@ -4,12 +4,12 @@ import { memo, useState } from 'react'
 
 import Link from 'next/link'
 
-import { Beneficiary } from '@prisma/client'
+import { Beneficiary, User } from '@prisma/client'
 import { IconDotsVertical } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table'
 import dayjs from 'dayjs'
-import { EyeIcon, PlusIcon, Trash2Icon } from 'lucide-react'
+import { EyeIcon, PlusIcon, Trash2Icon, UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { routes } from '@/constants/route'
@@ -29,7 +29,9 @@ import { deleteBeneficiary, fetchBeneficiaryList } from '@/services/beneficiary'
 
 import { showAlert } from '@utils/alert'
 
-const RowActions = ({ data, refetch }: { data: Beneficiary; refetch: () => void }) => {
+export type BeneficiaryWithCreator = Beneficiary & { creator: User | null }
+
+const RowActions = ({ data, refetch }: { data: BeneficiaryWithCreator; refetch: () => void }) => {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const handleDelete = async () => {
@@ -54,7 +56,7 @@ const RowActions = ({ data, refetch }: { data: Beneficiary; refetch: () => void 
   }
 
   return (
-    <>
+    <div className='min-w-20 flex justify-end'>
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant='ghost' className='data-[state=open]:bg-muted text-muted-foreground flex size-8' size='icon'>
@@ -77,7 +79,7 @@ const RowActions = ({ data, refetch }: { data: Beneficiary; refetch: () => void 
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </>
+    </div>
   )
 }
 
@@ -91,7 +93,7 @@ const BeneficiaryList = () => {
     retry: false
   })
 
-  const columns: ColumnDef<Beneficiary>[] = [
+  const columns: ColumnDef<BeneficiaryWithCreator>[] = [
     {
       accessorKey: 'name',
       header: 'Name',
@@ -111,9 +113,19 @@ const BeneficiaryList = () => {
       cell: ({ row }) => <div className='min-w-32'>{row.original.earningMembers}</div>
     },
     {
-      accessorKey: 'createdAt',
+      accessorKey: 'Created By',
       header: 'Created At',
-      cell: ({ row }) => (row.original.createdAt ? dayjs(row.original.createdAt).format('MMM D, YYYY') : 'N/A')
+      cell: ({ row }) => (
+        <div className='flex items-center gap-1'>
+          <UserIcon className='size-5 shrink-0' />
+          <div className='space-y-0.5'>
+            <p className='font-semibold'>{row?.original?.creator?.name || 'Unknown'}</p>
+            <p className='text-xs font-semibold'>
+              {row.original.createdAt ? dayjs(row.original.createdAt).format('MMM D, YYYY') : 'N/A'}
+            </p>
+          </div>
+        </div>
+      )
     },
     {
       accessorKey: 'id',

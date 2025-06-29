@@ -16,6 +16,7 @@ export const fetchBeneficiaryList = async ({ page, pageSize }: { page: number; p
           dependencyStatus: 'independent',
           isDeleted: { not: true }
         },
+        include: { creator: true },
         orderBy: { createdAt: 'desc' },
         take: pageSize
       }),

@@ -94,10 +94,11 @@ export default function PersonForm() {
   const { isSubmitting } = form?.formState
 
   async function onSubmit(data: BeneficiaryFormValues) {
-    if (!(userData as any)?.id) return toast.error('Invalid Login Info.')
+    console.log('userData', userData?.user?.id)
+    if (!(userData as any)?.user?.id) return toast.error('Invalid Login Info.')
 
     try {
-      const response = await addBeneficiary({ ...data, createdBy: (userData as any)?.id as string })
+      const response = await addBeneficiary({ ...data, createdBy: (userData as any)?.user?.id as string })
 
       if (!!response) {
         toast.success('Beneficiary Added Successfully')
