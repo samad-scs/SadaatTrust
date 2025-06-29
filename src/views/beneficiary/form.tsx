@@ -2,6 +2,7 @@
 
 import { useForm } from 'react-hook-form'
 
+import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
@@ -71,6 +72,8 @@ export default function PersonForm() {
   const t = useTranslations()
   const router = useRouter()
 
+  const { data: userData } = useSession()
+
   const form = useForm<BeneficiaryFormValues>({
     resolver: zodResolver(beneficiaryFormSchema),
     defaultValues
@@ -91,8 +94,10 @@ export default function PersonForm() {
   const { isSubmitting } = form?.formState
 
   async function onSubmit(data: BeneficiaryFormValues) {
+    if (!(userData as any)?.id) return toast.error('Invalid Login Info.')
+
     try {
-      const response = await addBeneficiary(data)
+      const response = await addBeneficiary({ ...data, createdBy: (userData as any)?.id as string })
 
       if (!!response) {
         toast.success('Beneficiary Added Successfully')

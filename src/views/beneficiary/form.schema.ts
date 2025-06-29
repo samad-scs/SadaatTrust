@@ -109,7 +109,8 @@ export const beneficiaryFormSchema = z.object({
   priorityLevel: z.string().optional(),
 
   // Comments
-  comments: z.string().optional()
+  comments: z.string().optional(),
+  createdBy: z.string().optional()
 })
 
 export type BeneficiaryFormValues = z.infer<typeof beneficiaryFormSchema>
