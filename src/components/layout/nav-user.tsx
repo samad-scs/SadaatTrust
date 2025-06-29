@@ -48,9 +48,11 @@ export function NavUser() {
                 size='lg'
                 className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
               >
-                <Avatar className='h-8 w-8 rounded-full border border-accent'>
+                <Avatar className='h-8 w-8 rounded-full'>
                   <AvatarImage alt={session?.user?.name} />
-                  <AvatarFallback className='rounded-full'>{getInitials(session?.user?.name || 'CN')}</AvatarFallback>
+                  <AvatarFallback className='rounded-full bg-accent'>
+                    {getInitials(session?.user?.name || 'CN')}
+                  </AvatarFallback>
                 </Avatar>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='truncate font-medium'>{session?.user?.name}</span>

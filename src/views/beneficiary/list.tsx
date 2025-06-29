@@ -141,7 +141,7 @@ const BeneficiaryList = () => {
           </Button>
         </Link>
       </div>
-      <div className='rounded-lg overflow-hidden border border-muted'>
+      <div className='rounded-lg overflow-hidden border border-muted bg-card'>
         <Table>
           <TableHeader className='bg-muted sticky top-0 z-10'>
             {table.getHeaderGroups().map(headerGroup => (

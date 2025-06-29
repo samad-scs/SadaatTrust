@@ -8,20 +8,22 @@ generator client {
 }
 
 model User {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  email        String    @unique
-  password     String
-  gender       Gender
-  phone        String
-  isSuperAdmin Boolean   @default(false)
-  isDeleted    Boolean   @default(false)
-  canViewData  Boolean   @default(false)
-  status       Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  accounts     Account[] // Relation for NextAuth.js
-  sessions     Session[] // Relation for NextAuth.js
+  id                   String        @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
+  email                String        @unique
+  password             String
+  gender               Gender
+  phone                String
+  isSuperAdmin         Boolean       @default(false)
+  isDeleted            Boolean       @default(false)
+  canViewData          Boolean       @default(false)
+  status               Boolean       @default(true)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  accounts             Account[] // Relation for NextAuth.js
+  sessions             Session[] // Relation for NextAuth.js
+  createdBeneficiaries Beneficiary[] @relation("BeneficiaryCreatedBy")
+  updatedBeneficiaries Beneficiary[] @relation("BeneficiaryUpdatedBy")
 }
 
 enum Gender {
@@ -155,6 +157,11 @@ model Beneficiary {
 
   // Comments
   comments String?
+
+  createdBy String? @db.ObjectId
+  updatedBy String? @db.ObjectId
+  creator   User?   @relation("BeneficiaryCreatedBy", fields: [createdBy], references: [id])
+  updater   User?   @relation("BeneficiaryUpdatedBy", fields: [updatedBy], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

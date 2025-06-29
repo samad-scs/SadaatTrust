@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from '@/prisma'
+import { Beneficiary } from '@prisma/client'
 
 import { BeneficiaryFormValues } from '@/views/beneficiary/form.schema'
 
@@ -102,5 +103,43 @@ export const deleteBeneficiary = async (id: string) => {
     console.log('error delete', error)
 
     return serverActionResponse(false, 'Failed to delete a user!', null)
+  }
+}
+
+export const fetchBeneficiaryById = async (id: string) => {
+  try {
+    if (!id) return null
+
+    const beneficiary = await prisma.beneficiary.findUnique({
+      where: {
+        id: id,
+        isDeleted: { not: true }
+      }
+    })
+
+    if (!beneficiary) return null
+
+    // If this is an independent beneficiary, fetch their dependent children
+    let dependentChildren: Beneficiary[] = []
+
+    if (beneficiary.dependencyStatus === 'independent') {
+      dependentChildren = await prisma.beneficiary.findMany({
+        where: {
+          parentId: id,
+          dependencyStatus: 'dependent',
+          isDeleted: { not: true }
+        },
+        orderBy: { age: 'asc' }
+      })
+    }
+
+    return {
+      beneficiary,
+      dependentChildren
+    }
+  } catch (error) {
+    console.log('error fetchBeneficiaryById', error)
+
+    return null
   }
 }
