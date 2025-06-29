@@ -1,9 +1,14 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 import { AnimatePresence, Transition, motion } from 'motion/react'
+
+/* eslint-disable no-unused-vars */
+
+/* eslint-disable no-unused-vars */
 
 type MotionHighlightMode = 'children' | 'parent'
 
@@ -32,16 +37,14 @@ type MotionHighlightContextType<T extends string> = {
   forceUpdateBounds?: boolean
 }
 
-const MotionHighlightContext = React.createContext<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  MotionHighlightContextType<any> | undefined
->(undefined)
+const MotionHighlightContext = React.createContext<MotionHighlightContextType<any> | undefined>(undefined)
 
 function useMotionHighlight<T extends string>(): MotionHighlightContextType<T> {
   const context = React.useContext(MotionHighlightContext)
   if (!context) {
     throw new Error('useMotionHighlight must be used within a MotionHighlightProvider')
   }
+
   return context as unknown as MotionHighlightContextType<T>
 }
 
@@ -143,6 +146,7 @@ function MotionHighlight<T extends string>({ ref, ...props }: MotionHighlightPro
       }
 
       const containerRect = localRef.current.getBoundingClientRect()
+
       const newBounds: Bounds = {
         top: bounds.top - containerRect.top + (boundsOffset.top ?? 0),
         left: bounds.left - containerRect.left + (boundsOffset.left ?? 0),
@@ -160,6 +164,7 @@ function MotionHighlight<T extends string>({ ref, ...props }: MotionHighlightPro
         ) {
           return prev
         }
+
         return newBounds
       })
     },
@@ -189,6 +194,7 @@ function MotionHighlight<T extends string>({ ref, ...props }: MotionHighlightPro
     }
 
     container.addEventListener('scroll', onScroll, { passive: true })
+
     return () => container.removeEventListener('scroll', onScroll)
   }, [mode, activeValue, safeSetBounds])
 
@@ -284,6 +290,7 @@ function getNonOverridingDataAttributes(
     if ((element.props as Record<string, unknown>)[key] === undefined) {
       acc[key] = dataAttributes[key]
     }
+
     return acc
   }, {})
 }
@@ -326,6 +333,7 @@ function MotionHighlightItem({
   ...props
 }: MotionHighlightItemProps) {
   const itemId = React.useId()
+
   const {
     activeValue,
     setActiveValue,
@@ -372,6 +380,7 @@ function MotionHighlightItem({
           previousBounds.height === bounds.height
         ) {
           rafId = requestAnimationFrame(updateBounds)
+
           return
         }
         previousBounds = bounds
